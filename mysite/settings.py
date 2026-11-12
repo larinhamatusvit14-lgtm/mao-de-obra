@@ -89,6 +89,7 @@ DATABASES = {
         'PORT': os.environ["PGPORT"],
     }
 }
+DATABASES["default"]["DISABLE_SERVER_SIDE_CURSORS"] = True
 
 
 # Password validation
