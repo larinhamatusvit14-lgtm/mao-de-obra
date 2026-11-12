@@ -1,0 +1,82 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mão de Obra</title>
+    <link rel="stylesheet" href="{% static 'prestadores/styles.css' %}">
+</head>
+<body>
+    <header class="topo">
+        <div class="container topo__conteudo">
+            <div>
+                <p class="brand">Mão de Obra</p>
+            </div>
+            <nav>
+                <a href="{% url 'prestadores:home' %}">Início</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <section class="hero">
+            <div class="hero__conteudo">
+                <span class="badge">Encontre profissionais perto de você</span>
+                <h1>Profissionais qualificados na sua cidade.</h1>
+                <p>Busque por localização e tipo de serviço para encontrar o prestador ideal.</p>
+            </div>
+        </section>
+
+        <section class="filtros">
+            <form method="get" action="{% url 'prestadores:home' %}" class="filtros__form">
+                <div class="campo">
+                    <label for="id_cidade">Localização</label>
+                    {{ form.cidade }}
+                </div>
+                <div class="campo">
+                    <label for="id_tipo_servico">Tipo de serviço</label>
+                    {{ form.tipo_servico }}
+                </div>
+                <button type="submit">Pesquisar</button>
+            </form>
+        </section>
+
+        <section class="lista">
+            <div class="lista__header">
+                <h2>Prestadores disponíveis</h2>
+                <span>{{ prestadores|length }} profissional(es)</span>
+            </div>
+
+            {% if prestadores %}
+                <div class="cards">
+                    {% for prestador in prestadores %}
+                        <article class="card">
+                            <div class="card__topo">
+                                <h3>{{ prestador.nome }}</h3>
+                                <span class="tag">{{ prestador.tipo_servico.nome }}</span>
+                            </div>
+                            <p class="localizacao">{{ prestador.bairro }} · {{ prestador.cidade }}</p>
+                            <p class="descricao">{{ prestador.descricao }}</p>
+                            <div class="card__rodape">
+                                <a
+                                    class="whatsapp"
+                                    href="https://wa.me/{{ prestador.whatsapp|cut:'()'|cut:'-'|cut:' ' }}"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                >
+                                    Entrar em contato
+                                </a>
+                            </div>
+                        </article>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="vazio">
+                    <p>Nenhum prestador encontrado com os filtros selecionados.</p>
+                </div>
+            {% endif %}
+        </section>
+    </main>
+</body>
+</html>
