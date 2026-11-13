@@ -8,6 +8,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
     <link rel="stylesheet" href="{% static 'prestadores/styles.css' %}">
 </head>
 <body>
@@ -117,6 +118,7 @@
         </section>
     </main>
     <script id="profissionais-data" type="application/json">{{ prestadores_json|safe }}</script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
     <script>
         const profissionaisMock = JSON.parse(document.getElementById('profissionais-data').textContent || '[]');
 
@@ -124,49 +126,44 @@
         const button = document.querySelector('[data-open-map]');
         const closeButtons = document.querySelectorAll('[data-close-map]');
         const mapCanvas = document.getElementById('mapaCanvas');
+        let mapaInstancia = null;
 
-        function projectToMap(lat, lng) {
-            const minLat = -30;
-            const maxLat = -10;
-            const minLng = -50;
-            const maxLng = -40;
+        function montarMapa() {
+            if (!mapaInstancia) {
+                mapaInstancia = L.map('mapaCanvas', {
+                    zoomControl: true,
+                    scrollWheelZoom: true,
+                }).setView([-15.788, -47.879], 4);
 
-            const x = ((lng - minLng) / (maxLng - minLng)) * 100;
-            const y = ((lat - minLat) / (maxLat - minLat)) * 100;
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    attribution: '&copy; OpenStreetMap contributors'
+                }).addTo(mapaInstancia);
+            }
 
-            return {
-                x: Math.max(6, Math.min(94, x)),
-                y: Math.max(10, Math.min(90, 100 - y)),
-            };
-        }
-
-        function renderMap() {
-            mapCanvas.innerHTML = '';
+            mapaInstancia.eachLayer((layer) => {
+                if (layer instanceof L.Marker) {
+                    mapaInstancia.removeLayer(layer);
+                }
+            });
 
             profissionaisMock.forEach((profissional) => {
-                const coords = projectToMap(profissional.latitude, profissional.longitude);
-
-                const point = document.createElement('div');
-                point.className = 'map-point';
-                point.style.left = `${coords.x}%`;
-                point.style.top = `${coords.y}%`;
-                point.title = `${profissional.nome} - ${profissional.tipo}`;
-
-                const label = document.createElement('div');
-                label.className = 'map-label';
-                label.textContent = profissional.tipo;
-                label.style.left = `${coords.x}%`;
-                label.style.top = `${coords.y}%`;
-
-                mapCanvas.appendChild(point);
-                mapCanvas.appendChild(label);
+                const marker = L.marker([profissional.latitude, profissional.longitude]).addTo(mapaInstancia);
+                marker.bindPopup(`<strong>${profissional.nome}</strong><br>${profissional.tipo}<br>${profissional.bairro} · ${profissional.cidade}`);
             });
+
+            if (profissionaisMock.length) {
+                const bounds = profissionaisMock.map((p) => [p.latitude, p.longitude]);
+                mapaInstancia.fitBounds(bounds, { padding: [28, 28] });
+            }
         }
 
         button.addEventListener('click', () => {
-            renderMap();
             modal.classList.remove('hidden');
             modal.setAttribute('aria-hidden', 'false');
+            setTimeout(() => {
+                montarMapa();
+                mapaInstancia.invalidateSize();
+            }, 80);
         });
 
         closeButtons.forEach((item) => {
