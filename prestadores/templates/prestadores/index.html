@@ -8,7 +8,6 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
     <link rel="stylesheet" href="{% static 'prestadores/styles.css' %}">
 </head>
 <body>
@@ -151,7 +150,6 @@
         </section>
     </main>
     {{ prestadores_json|json_script:"profissionais-data" }}
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
     <script>
         const profissionaisMock = JSON.parse(document.getElementById('profissionais-data').textContent || '[]');
         const modal = document.getElementById('mapaModal');
@@ -177,19 +175,7 @@
             document.body.classList.add('modal-open');
 
             setTimeout(() => {
-                if (typeof L !== 'undefined') {
-                    montarMapa();
-                    if (mapaInstancia && typeof mapaInstancia.invalidateSize === 'function') {
-                        mapaInstancia.invalidateSize();
-                    }
-                } else {
-                    mapCanvas.innerHTML = `
-                        <div class="map-fallback">
-                            <strong>Mapa indisponível no momento</strong>
-                            <span>Os profissionais estão em destaque no painel principal.</span>
-                        </div>
-                    `;
-                }
+                montarMapa();
             }, 80);
         }
 
@@ -245,35 +231,45 @@
             }
         }
 
+        function projectToMap(lat, lng) {
+            const minLat = -33;
+            const maxLat = -3;
+            const minLng = -52;
+            const maxLng = -34;
+
+            const x = ((lng - minLng) / (maxLng - minLng)) * 100;
+            const y = ((lat - minLat) / (maxLat - minLat)) * 100;
+
+            return {
+                x: Math.min(96, Math.max(4, x)),
+                y: Math.min(96, Math.max(4, 100 - y)),
+            };
+        }
+
         function montarMapa() {
-            if (typeof L === 'undefined' || !mapCanvas) return;
+            if (!mapCanvas) return;
 
-            if (!mapaInstancia) {
-                mapaInstancia = L.map('mapaCanvas', {
-                    zoomControl: true,
-                    scrollWheelZoom: true,
-                }).setView([-15.788, -47.879], 4);
-
-                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                    attribution: '&copy; OpenStreetMap contributors'
-                }).addTo(mapaInstancia);
-            }
-
-            mapaInstancia.eachLayer((layer) => {
-                if (layer instanceof L.Marker) {
-                    mapaInstancia.removeLayer(layer);
-                }
-            });
+            mapCanvas.innerHTML = '';
 
             profissionaisMock.forEach((profissional) => {
-                const marker = L.marker([profissional.latitude, profissional.longitude]).addTo(mapaInstancia);
-                marker.bindPopup(`<strong>${profissional.nome}</strong><br>${profissional.tipo}<br>${profissional.bairro} · ${profissional.cidade}`);
-            });
+                const coords = projectToMap(profissional.latitude, profissional.longitude);
+                const marker = document.createElement('button');
+                marker.type = 'button';
+                marker.className = 'map-marker';
+                marker.title = `${profissional.nome} · ${profissional.tipo}`;
+                marker.style.left = `${coords.x}%`;
+                marker.style.top = `${coords.y}%`;
 
-            if (profissionaisMock.length) {
-                const bounds = profissionaisMock.map((p) => [p.latitude, p.longitude]);
-                mapaInstancia.fitBounds(bounds, { padding: [28, 28] });
-            }
+                marker.addEventListener('click', () => {
+                    const index = profissionaisMock.findIndex((item) => item.nome === profissional.nome);
+                    abrirModalPerfil(index);
+                });
+
+                const pulse = document.createElement('span');
+                pulse.className = 'map-marker__pulse';
+                marker.appendChild(pulse);
+                mapCanvas.appendChild(marker);
+            });
         }
 
         if (button) {

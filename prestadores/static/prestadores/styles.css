@@ -157,34 +157,55 @@ img {
 .map-canvas {
     height: 420px;
     border-radius: 18px;
-    background: linear-gradient(135deg, #eff6ff, #dbeafe);
+    background:
+        linear-gradient(135deg, rgba(160, 214, 180, 0.28), rgba(116, 191, 141, 0.22)),
+        repeating-linear-gradient(
+            to right,
+            rgba(255,255,255,0.15),
+            rgba(255,255,255,0.15) 2px,
+            transparent 2px,
+            transparent 38px
+        ),
+        repeating-linear-gradient(
+            to bottom,
+            rgba(255,255,255,0.18),
+            rgba(255,255,255,0.18) 2px,
+            transparent 2px,
+            transparent 38px
+        ),
+        #ebf7ee;
     position: relative;
     overflow: hidden;
     border: 1px solid var(--line);
 }
 
-.map-point {
+.map-marker {
     position: absolute;
     width: 18px;
     height: 18px;
-    border-radius: 50%;
-    background: var(--success);
-    border: 3px solid #fff;
-    box-shadow: 0 0 0 6px rgba(22, 163, 74, 0.18);
+    border: none;
+    background: transparent;
     transform: translate(-50%, -50%);
+    cursor: pointer;
+    padding: 0;
 }
 
-.map-label {
+.map-marker__pulse {
+    display: block;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: var(--primary);
+    box-shadow: 0 0 0 6px rgba(37, 99, 235, 0.18);
+    position: relative;
+}
+
+.map-marker__pulse::after {
+    content: "";
     position: absolute;
-    background: rgba(255,255,255,0.9);
-    border: 1px solid var(--line);
-    border-radius: 999px;
-    padding: 7px 10px;
-    font-size: 0.72rem;
-    color: var(--text);
-    font-weight: 700;
-    transform: translate(-50%, -120%);
-    white-space: nowrap;
+    inset: -8px;
+    border: 2px solid rgba(37,99,235,0.35);
+    border-radius: 50%;
 }
 
 .map-fallback {
