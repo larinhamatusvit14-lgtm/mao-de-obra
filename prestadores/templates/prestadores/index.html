@@ -121,14 +121,46 @@
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
     <script>
         const profissionaisMock = JSON.parse(document.getElementById('profissionais-data').textContent || '[]');
-
         const modal = document.getElementById('mapaModal');
         const button = document.querySelector('[data-open-map]');
         const closeButtons = document.querySelectorAll('[data-close-map]');
         const mapCanvas = document.getElementById('mapaCanvas');
         let mapaInstancia = null;
 
+        function abrirModalMapa() {
+            if (!modal) return;
+
+            modal.classList.remove('hidden');
+            modal.setAttribute('aria-hidden', 'false');
+            document.body.classList.add('modal-open');
+
+            setTimeout(() => {
+                if (typeof L !== 'undefined') {
+                    montarMapa();
+                    if (mapaInstancia && typeof mapaInstancia.invalidateSize === 'function') {
+                        mapaInstancia.invalidateSize();
+                    }
+                } else {
+                    mapCanvas.innerHTML = `
+                        <div class="map-fallback">
+                            <strong>Mapa indisponível no momento</strong>
+                            <span>Os profissionais estão em destaque no painel principal.</span>
+                        </div>
+                    `;
+                }
+            }, 80);
+        }
+
+        function fecharModalMapa() {
+            if (!modal) return;
+            modal.classList.add('hidden');
+            modal.setAttribute('aria-hidden', 'true');
+            document.body.classList.remove('modal-open');
+        }
+
         function montarMapa() {
+            if (typeof L === 'undefined' || !mapCanvas) return;
+
             if (!mapaInstancia) {
                 mapaInstancia = L.map('mapaCanvas', {
                     zoomControl: true,
@@ -157,20 +189,13 @@
             }
         }
 
-        button.addEventListener('click', () => {
-            modal.classList.remove('hidden');
-            modal.setAttribute('aria-hidden', 'false');
-            setTimeout(() => {
-                montarMapa();
-                mapaInstancia.invalidateSize();
-            }, 80);
-        });
+        if (button) {
+            button.addEventListener('click', abrirModalMapa);
+            button.onclick = abrirModalMapa;
+        }
 
         closeButtons.forEach((item) => {
-            item.addEventListener('click', () => {
-                modal.classList.add('hidden');
-                modal.setAttribute('aria-hidden', 'true');
-            });
+            item.addEventListener('click', fecharModalMapa);
         });
     </script>
 </body>
