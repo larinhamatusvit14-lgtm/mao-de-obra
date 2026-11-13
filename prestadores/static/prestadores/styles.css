@@ -84,14 +84,14 @@ img {
 }
 
 .hero {
-    padding: 52px 0 26px;
+    padding: 42px 0 18px;
 }
 
 .hero__conteudo {
     background: linear-gradient(135deg, #eff6ff, #dbeafe);
     border: 1px solid rgba(37,99,235,0.08);
     border-radius: 28px;
-    padding: 42px 32px;
+    padding: 42px 32px 28px;
     box-shadow: var(--shadow);
 }
 
@@ -107,7 +107,7 @@ img {
 }
 
 .hero h1 {
-    margin: 0 0 14px;
+    margin: 0 0 10px;
     font-size: clamp(2.1rem, 4vw, 3.5rem);
     line-height: 1.1;
     letter-spacing: -0.07em;
@@ -120,19 +120,20 @@ img {
     max-width: 620px;
 }
 
-.filtros {
-    margin: 12px 0 32px;
+.filtros-wrap {
+    margin-top: 28px;
 }
 
 .filtros__form {
     display: grid;
     grid-template-columns: 1.3fr 1.1fr auto;
     gap: 16px;
-    background: var(--panel);
-    border: 1px solid var(--line);
+    background: rgba(255,255,255,0.9);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(148, 163, 184, 0.2);
     padding: 18px;
-    border-radius: 18px;
-    box-shadow: var(--shadow);
+    border-radius: 20px;
+    box-shadow: 0 18px 35px rgba(15, 23, 42, 0.08);
 }
 
 .campo {

@@ -31,21 +31,21 @@
                 <span class="badge">Encontre profissionais perto de você</span>
                 <h1>Profissionais qualificados na sua cidade.</h1>
                 <p>Busque por localização e tipo de serviço para encontrar o prestador ideal.</p>
-            </div>
-        </section>
 
-        <section class="filtros">
-            <form method="get" action="{% url 'prestadores:home' %}" class="filtros__form">
-                <div class="campo">
-                    <label for="id_cidade">Localização</label>
-                    {{ form.cidade }}
+                <div class="filtros-wrap">
+                    <form method="get" action="{% url 'prestadores:home' %}" class="filtros__form">
+                        <div class="campo">
+                            <label for="id_cidade">Localização</label>
+                            {{ form.cidade }}
+                        </div>
+                        <div class="campo">
+                            <label for="id_tipo_servico">Tipo de serviço</label>
+                            {{ form.tipo_servico }}
+                        </div>
+                        <button type="submit">Pesquisar</button>
+                    </form>
                 </div>
-                <div class="campo">
-                    <label for="id_tipo_servico">Tipo de serviço</label>
-                    {{ form.tipo_servico }}
-                </div>
-                <button type="submit">Pesquisar</button>
-            </form>
+            </div>
         </section>
 
         <section class="lista">
