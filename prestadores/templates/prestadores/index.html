@@ -22,8 +22,9 @@
             </div>
             <nav>
                 <a href="{% url 'prestadores:home' %}">Início</a>
-                <button type="button" class="nav-map" data-scroll-filtros>Buscar profissional</button>
-                <button type="button" class="nav-map" data-open-map>Mapa dos profissionais</button>
+                <button type="button" class="nav-map" data-scroll-filtros>Ver profissionais</button>
+                <button type="button" class="nav-map" data-open-map>Mapa</button>
+                <button type="button" class="nav-map" data-open-artigos>Artigos</button>
             </nav>
         </div>
     </header>
@@ -67,6 +68,39 @@
                     <h4>Avaliações</h4>
                     <div id="perfilAvaliacoes" class="avaliacoes-list"></div>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal hidden" id="artigosModal" aria-hidden="true">
+        <div class="modal-backdrop" data-close-artigos></div>
+        <div class="modal-card artigos-modal" role="dialog" aria-modal="true" aria-labelledby="artigosTitle">
+            <div class="modal-header">
+                <h3 id="artigosTitle">Artigos de profissionais</h3>
+                <button type="button" class="close-btn" data-close-artigos>✕</button>
+            </div>
+
+            <div class="artigos-grid">
+                <article class="artigo-card" data-artigo="0">
+                    <span class="artigo-tag">Eletricista</span>
+                    <h4>Como escolher um eletricista confiável</h4>
+                    <p>Veja os sinais de um profissional sério, desde laudos até garantia do serviço.</p>
+                    <button type="button" class="artigo-btn">Ler artigo</button>
+                </article>
+
+                <article class="artigo-card" data-artigo="1">
+                    <span class="artigo-tag">Pintura</span>
+                    <h4>5 erros que estragam a pintura residencial</h4>
+                    <p>Conheça os pontos que fazem a diferença entre uma pintura bonita e uma que descasca cedo.</p>
+                    <button type="button" class="artigo-btn">Ler artigo</button>
+                </article>
+
+                <article class="artigo-card" data-artigo="2">
+                    <span class="artigo-tag">Reforma</span>
+                    <h4>Quando vale a pena contratar um pedreiro ou reforma completa</h4>
+                    <p>Entenda quando a reforma exige planejamento, orçamento e profissionais especializados.</p>
+                    <button type="button" class="artigo-btn">Ler artigo</button>
+                </article>
             </div>
         </div>
     </div>
@@ -177,9 +211,12 @@
 
         const modal = document.getElementById('mapaModal');
         const perfilModal = document.getElementById('perfilModal');
+        const artigosModal = document.getElementById('artigosModal');
         const button = document.querySelector('[data-open-map]');
+        const openArtigosButton = document.querySelector('[data-open-artigos]');
         const closeButtons = document.querySelectorAll('[data-close-map]');
         const closePerfilButtons = document.querySelectorAll('[data-close-perfil]');
+        const closeArtigosButtons = document.querySelectorAll('[data-close-artigos]');
         const mapCanvas = document.getElementById('mapaCanvas');
         const perfilFoto = document.getElementById('perfilFoto');
         const perfilTipo = document.getElementById('perfilTipo');
@@ -261,6 +298,22 @@
             }
         }
 
+        function abrirArtigos() {
+            if (!artigosModal) return;
+            artigosModal.classList.remove('hidden');
+            artigosModal.setAttribute('aria-hidden', 'false');
+            document.body.classList.add('modal-open');
+        }
+
+        function fecharArtigos() {
+            if (!artigosModal) return;
+            artigosModal.classList.add('hidden');
+            artigosModal.setAttribute('aria-hidden', 'true');
+            if (document.querySelector('.modal:not(.hidden)') === null) {
+                document.body.classList.remove('modal-open');
+            }
+        }
+
         function montarMapa() {
             if (!mapCanvas) return;
 
@@ -313,6 +366,10 @@
             button.onclick = abrirModalMapa;
         }
 
+        if (openArtigosButton) {
+            openArtigosButton.addEventListener('click', abrirArtigos);
+        }
+
         closeButtons.forEach((item) => {
             item.addEventListener('click', fecharModalMapa);
         });
@@ -321,10 +378,38 @@
             item.addEventListener('click', fecharModalPerfil);
         });
 
+        closeArtigosButtons.forEach((item) => {
+            item.addEventListener('click', fecharArtigos);
+        });
+
         document.querySelectorAll('[data-open-perfil]').forEach((buttonPerfil) => {
             buttonPerfil.addEventListener('click', () => {
                 const index = Number(buttonPerfil.dataset.openPerfil);
                 abrirModalPerfil(index);
+            });
+        });
+
+        document.querySelectorAll('.artigo-btn').forEach((botao) => {
+            botao.addEventListener('click', () => {
+                const artigo = botao.closest('.artigo-card');
+                const numero = artigo?.dataset.artigo;
+                const artigos = [
+                    {
+                        titulo: 'Como escolher um eletricista confiável',
+                        texto: 'Escolha um profissional com experiência, orçamento transparente e garantia do serviço. Verifique referências, peça fotos de trabalhos anteriores e confirme se o material usado é de qualidade.'
+                    },
+                    {
+                        titulo: '5 erros que estragam a pintura residencial',
+                        texto: 'A maioria dos problemas vem de preparação inadequada da parede, tinta inferior, pouca ventilação e ausência de proteção em móveis e pisos. O ideal é planejar bem o acabamento antes de começar.'
+                    },
+                    {
+                        titulo: 'Quando vale a pena contratar um pedreiro ou reforma completa',
+                        texto: 'Se a obra envolve estruturas, hidráulica, elétrica, acabamento e prazos, o melhor é contratar uma equipe ou profissional especializado. Isso reduz retrabalho e evita custo extra em etapas futuras.'
+                    }
+                ];
+
+                const artigoSelecionado = artigos[Number(numero)] || artigos[0];
+                alert(`${artigoSelecionado.titulo}\n\n${artigoSelecionado.texto}`);
             });
         });
     </script>
