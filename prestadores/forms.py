@@ -18,6 +18,12 @@ class BuscaPrestadorForm(forms.Form):
             ('pedreiro', 'Pedreiro'),
             ('manicure', 'Manicure'),
             ('pintor', 'Pintor'),
+            ('jardineiro', 'Jardineiro'),
+            ('mecanico', 'Mecânico'),
+            ('cabeleireiro', 'Cabeleireiro'),
+            ('ar-condicionado', 'Instalador de Ar Condicionado'),
+            ('faxineiro', 'Faxineiro'),
+            ('montador', 'Montador de Móveis'),
         ],
         widget=forms.Select(),
     )
