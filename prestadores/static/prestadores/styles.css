@@ -657,14 +657,138 @@ button:hover {
 }
 
 @media (max-width: 760px) {
-    .filtros__form {
-        grid-template-columns: 1fr;
+    .topo {
+        padding: 14px 0;
     }
 
-    .topo__conteudo,
+    .topo__conteudo {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+
+    .topo nav {
+        width: 100%;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        gap: 8px;
+    }
+
+    .nav-map {
+        min-width: 0;
+        flex: 1 1 45%;
+        padding: 10px 12px;
+    }
+
+    .hero {
+        padding-top: 24px;
+    }
+
+    .hero__conteudo {
+        padding: 22px 18px 18px;
+        border-radius: 22px;
+    }
+
+    .badge {
+        font-size: 0.72rem;
+    }
+
+    .hero h1 {
+        font-size: clamp(2.2rem, 12vw, 3.3rem);
+    }
+
+    .filtros__form {
+        grid-template-columns: 1fr;
+        gap: 12px;
+        padding: 12px;
+    }
+
+    .campo input,
+    .campo select {
+        font-size: 16px;
+        width: 100%;
+    }
+
     .lista__header {
         flex-direction: column;
         align-items: flex-start;
         gap: 10px;
+    }
+
+    .cards {
+        grid-template-columns: 1fr;
+    }
+
+    .card,
+    .modal-card {
+        border-radius: 18px;
+    }
+
+    .card__rodape {
+        flex-direction: column;
+    }
+
+    .ghost-btn,
+    .whatsapp {
+        width: 100%;
+    }
+
+    .modal-card {
+        width: min(92vw, 620px);
+        padding: 16px;
+    }
+
+    .modal-header {
+        margin-bottom: 12px;
+    }
+
+    .map-canvas {
+        height: 300px;
+    }
+
+    .artigos-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .perfil-header,
+    .perfil-header__identity {
+        align-items: flex-start;
+    }
+
+    .perfil-header {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .perfil-meta-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 480px) {
+    .brand {
+        font-size: 1.35rem;
+    }
+
+    .topo nav {
+        gap: 6px;
+    }
+
+    .nav-map {
+        flex: 1 1 100%;
+    }
+
+    .hero h1 {
+        line-height: 1.05;
+    }
+
+    .close-btn {
+        width: 32px;
+        height: 32px;
+    }
+
+    .modal-card {
+        padding: 14px;
     }
 }
