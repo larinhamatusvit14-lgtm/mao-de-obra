@@ -21,9 +21,21 @@
             </div>
             <nav>
                 <a href="{% url 'prestadores:home' %}">Início</a>
+                <button type="button" class="nav-map" data-open-map>Mapa dos profissionais</button>
             </nav>
         </div>
     </header>
+
+    <div class="modal hidden" id="mapaModal" aria-hidden="true">
+        <div class="modal-backdrop" data-close-map></div>
+        <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="mapTitle">
+            <div class="modal-header">
+                <h3 id="mapTitle">Mapa dos profissionais</h3>
+                <button type="button" class="close-btn" data-close-map>✕</button>
+            </div>
+            <div class="map-canvas" id="mapaCanvas"></div>
+        </div>
+    </div>
 
     <main class="container">
         <section class="hero">
@@ -104,5 +116,65 @@
             {% endif %}
         </section>
     </main>
+    <script id="profissionais-data" type="application/json">{{ prestadores_json|safe }}</script>
+    <script>
+        const profissionaisMock = JSON.parse(document.getElementById('profissionais-data').textContent || '[]');
+
+        const modal = document.getElementById('mapaModal');
+        const button = document.querySelector('[data-open-map]');
+        const closeButtons = document.querySelectorAll('[data-close-map]');
+        const mapCanvas = document.getElementById('mapaCanvas');
+
+        function projectToMap(lat, lng) {
+            const minLat = -30;
+            const maxLat = -10;
+            const minLng = -50;
+            const maxLng = -40;
+
+            const x = ((lng - minLng) / (maxLng - minLng)) * 100;
+            const y = ((lat - minLat) / (maxLat - minLat)) * 100;
+
+            return {
+                x: Math.max(6, Math.min(94, x)),
+                y: Math.max(10, Math.min(90, 100 - y)),
+            };
+        }
+
+        function renderMap() {
+            mapCanvas.innerHTML = '';
+
+            profissionaisMock.forEach((profissional) => {
+                const coords = projectToMap(profissional.latitude, profissional.longitude);
+
+                const point = document.createElement('div');
+                point.className = 'map-point';
+                point.style.left = `${coords.x}%`;
+                point.style.top = `${coords.y}%`;
+                point.title = `${profissional.nome} - ${profissional.tipo}`;
+
+                const label = document.createElement('div');
+                label.className = 'map-label';
+                label.textContent = profissional.tipo;
+                label.style.left = `${coords.x}%`;
+                label.style.top = `${coords.y}%`;
+
+                mapCanvas.appendChild(point);
+                mapCanvas.appendChild(label);
+            });
+        }
+
+        button.addEventListener('click', () => {
+            renderMap();
+            modal.classList.remove('hidden');
+            modal.setAttribute('aria-hidden', 'false');
+        });
+
+        closeButtons.forEach((item) => {
+            item.addEventListener('click', () => {
+                modal.classList.add('hidden');
+                modal.setAttribute('aria-hidden', 'true');
+            });
+        });
+    </script>
 </body>
 </html>

@@ -70,17 +70,129 @@ img {
     letter-spacing: -0.05em;
 }
 
-.topo nav a {
+.topo nav {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.topo nav a,
+.nav-map {
     color: #fff;
     text-decoration: none;
     font-weight: 700;
     padding: 10px 14px;
     border-radius: 999px;
     transition: 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid rgba(255,255,255,0.15);
+    background: rgba(255,255,255,0.04);
+    cursor: pointer;
+    font-family: inherit;
 }
 
-.topo nav a:hover {
+.topo nav a:hover,
+.nav-map:hover {
     background: rgba(255,255,255,0.1);
+}
+
+.modal {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 50;
+}
+
+.modal.hidden {
+    display: none;
+}
+
+.modal-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.55);
+}
+
+.modal-card {
+    position: relative;
+    width: min(900px, 90vw);
+    background: #fff;
+    border-radius: 24px;
+    box-shadow: 0 30px 60px rgba(15, 23, 42, 0.25);
+    padding: 20px;
+    z-index: 1;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 18px;
+}
+
+.modal-header h3 {
+    margin: 0;
+    font-size: 1.4rem;
+}
+
+.close-btn {
+    border: none;
+    background: #eef2ff;
+    color: var(--primary-dark);
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    font-weight: 800;
+    cursor: pointer;
+}
+
+.map-canvas {
+    height: 420px;
+    border-radius: 18px;
+    background: linear-gradient(135deg, #eff6ff, #dbeafe);
+    position: relative;
+    overflow: hidden;
+    border: 1px solid var(--line);
+}
+
+.map-point {
+    position: absolute;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: var(--success);
+    border: 3px solid #fff;
+    box-shadow: 0 0 0 6px rgba(22, 163, 74, 0.18);
+    transform: translate(-50%, -50%);
+}
+
+.map-label {
+    position: absolute;
+    background: rgba(255,255,255,0.9);
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    padding: 7px 10px;
+    font-size: 0.72rem;
+    color: var(--text);
+    font-weight: 700;
+    transform: translate(-50%, -120%);
+    white-space: nowrap;
+}
+
+@media (max-width: 760px) {
+    .topo__conteudo {
+        flex-wrap: wrap;
+        gap: 12px;
+    }
+
+    .topo nav {
+        width: 100%;
+        justify-content: space-between;
+    }
 }
 
 .hero {
