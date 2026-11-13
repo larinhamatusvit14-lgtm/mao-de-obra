@@ -259,6 +259,7 @@
                 marker.title = `${profissional.nome} · ${profissional.tipo}`;
                 marker.style.left = `${coords.x}%`;
                 marker.style.top = `${coords.y}%`;
+                marker.style.zIndex = '20';
 
                 marker.addEventListener('click', () => {
                     const index = profissionaisMock.findIndex((item) => item.nome === profissional.nome);
