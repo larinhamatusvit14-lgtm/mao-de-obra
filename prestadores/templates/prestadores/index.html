@@ -38,6 +38,38 @@
         </div>
     </div>
 
+    <div class="modal hidden" id="perfilModal" aria-hidden="true">
+        <div class="modal-backdrop" data-close-perfil></div>
+        <div class="modal-card perfil-modal" role="dialog" aria-modal="true" aria-labelledby="perfilTitle">
+            <div class="modal-header perfil-header">
+                <div class="perfil-header__identity">
+                    <img id="perfilFoto" src="" alt="Foto do profissional" class="perfil-foto">
+                    <div>
+                        <span class="perfil-tag" id="perfilTipo"></span>
+                        <h3 id="perfilTitle">Profissional</h3>
+                    </div>
+                </div>
+                <button type="button" class="close-btn" data-close-perfil>✕</button>
+            </div>
+
+            <div class="perfil-content">
+                <div class="perfil-summary">
+                    <p id="perfilDescricao"></p>
+                    <div class="perfil-meta-grid">
+                        <span id="perfilCidade"></span>
+                        <span id="perfilBairro"></span>
+                        <span id="perfilWhatsapp"></span>
+                    </div>
+                </div>
+
+                <div class="avaliacoes-box">
+                    <h4>Avaliações</h4>
+                    <div id="perfilAvaliacoes" class="avaliacoes-list"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <main class="container">
         <section class="hero">
             <div class="hero__conteudo">
@@ -78,7 +110,7 @@
                     {% for prestador in prestadores %}
                         <article class="card">
                             <div class="perfil-header">
-                                <div class="avatar">{{ prestador.nome|slice:':1'|upper }}</div>
+                                <img class="avatar-photo" src="{{ prestador.foto }}" alt="{{ prestador.nome }}">
                                 <div class="perfil-info">
                                     <h3>{{ prestador.nome }}</h3>
                                     <span class="tag">{{ prestador.tipo_servico.nome }}</span>
@@ -98,6 +130,7 @@
                             </div>
 
                             <div class="card__rodape">
+                                <button type="button" class="ghost-btn" data-open-perfil="{{ forloop.counter0 }}">Ver trabalhador</button>
                                 <a
                                     class="whatsapp"
                                     href="https://wa.me/{{ prestador.whatsapp|cut:'()'|cut:'-'|cut:' ' }}"
@@ -117,19 +150,28 @@
             {% endif %}
         </section>
     </main>
-    <script id="profissionais-data" type="application/json">{{ prestadores_json|safe }}</script>
+    {{ prestadores_json|json_script:"profissionais-data" }}
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
     <script>
         const profissionaisMock = JSON.parse(document.getElementById('profissionais-data').textContent || '[]');
         const modal = document.getElementById('mapaModal');
+        const perfilModal = document.getElementById('perfilModal');
         const button = document.querySelector('[data-open-map]');
         const closeButtons = document.querySelectorAll('[data-close-map]');
+        const closePerfilButtons = document.querySelectorAll('[data-close-perfil]');
         const mapCanvas = document.getElementById('mapaCanvas');
+        const perfilFoto = document.getElementById('perfilFoto');
+        const perfilTipo = document.getElementById('perfilTipo');
+        const perfilTitle = document.getElementById('perfilTitle');
+        const perfilDescricao = document.getElementById('perfilDescricao');
+        const perfilCidade = document.getElementById('perfilCidade');
+        const perfilBairro = document.getElementById('perfilBairro');
+        const perfilWhatsapp = document.getElementById('perfilWhatsapp');
+        const perfilAvaliacoes = document.getElementById('perfilAvaliacoes');
         let mapaInstancia = null;
 
         function abrirModalMapa() {
             if (!modal) return;
-
             modal.classList.remove('hidden');
             modal.setAttribute('aria-hidden', 'false');
             document.body.classList.add('modal-open');
@@ -155,7 +197,52 @@
             if (!modal) return;
             modal.classList.add('hidden');
             modal.setAttribute('aria-hidden', 'true');
-            document.body.classList.remove('modal-open');
+            if (document.querySelector('.modal:not(.hidden)') === null) {
+                document.body.classList.remove('modal-open');
+            }
+        }
+
+        function abrirModalPerfil(index) {
+            const profissional = profissionaisMock[index];
+            if (!profissional || !perfilModal) return;
+
+            perfilFoto.src = profissional.foto || 'https://placehold.co/160x160/1d4ed8/ffffff?text=MO';
+            perfilTipo.textContent = profissional.tipo || 'Profissional';
+            perfilTitle.textContent = profissional.nome || 'Profissional';
+            perfilDescricao.textContent = profissional.descricao || 'Sem descrição disponível.';
+            perfilCidade.textContent = `📍 ${profissional.cidade || ''}`;
+            perfilBairro.textContent = `Bairro: ${profissional.bairro || ''}`;
+            perfilWhatsapp.textContent = `WhatsApp: ${profissional.whatsapp || ''}`;
+
+            if (Array.isArray(profissional.avaliacoes) && profissional.avaliacoes.length) {
+                perfilAvaliacoes.innerHTML = profissional.avaliacoes.map((avaliacao) => {
+                    const estrelas = '★'.repeat(avaliacao.nota || 0) + '☆'.repeat(5 - (avaliacao.nota || 0));
+                    return `
+                        <div class="avaliacao-item">
+                            <div class="avaliacao-topo">
+                                <strong>${avaliacao.nome || 'Cliente'}</strong>
+                                <span>${estrelas}</span>
+                            </div>
+                            <p>${avaliacao.texto || 'Avaliação do cliente.'}</p>
+                        </div>
+                    `;
+                }).join('');
+            } else {
+                perfilAvaliacoes.innerHTML = '<p class="sem-avaliacao">Ainda não há avaliações para este profissional.</p>';
+            }
+
+            perfilModal.classList.remove('hidden');
+            perfilModal.setAttribute('aria-hidden', 'false');
+            document.body.classList.add('modal-open');
+        }
+
+        function fecharModalPerfil() {
+            if (!perfilModal) return;
+            perfilModal.classList.add('hidden');
+            perfilModal.setAttribute('aria-hidden', 'true');
+            if (document.querySelector('.modal:not(.hidden)') === null) {
+                document.body.classList.remove('modal-open');
+            }
         }
 
         function montarMapa() {
@@ -196,6 +283,17 @@
 
         closeButtons.forEach((item) => {
             item.addEventListener('click', fecharModalMapa);
+        });
+
+        closePerfilButtons.forEach((item) => {
+            item.addEventListener('click', fecharModalPerfil);
+        });
+
+        document.querySelectorAll('[data-open-perfil]').forEach((buttonPerfil) => {
+            buttonPerfil.addEventListener('click', () => {
+                const index = Number(buttonPerfil.dataset.openPerfil);
+                abrirModalPerfil(index);
+            });
         });
     </script>
 </body>
