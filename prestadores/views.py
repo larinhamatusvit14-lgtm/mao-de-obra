@@ -1,3 +1,4 @@
+import json
 from types import SimpleNamespace
 
 from django.shortcuts import render
@@ -139,7 +140,7 @@ def home(request):
                 p for p in prestadores if p.tipo_servico.slug == tipo_servico
             ]
 
-    prestadores_json = [
+    prestadores_json = json.dumps([
         {
             'nome': p.nome,
             'tipo': p.tipo_servico.nome,
@@ -149,7 +150,7 @@ def home(request):
             'longitude': p.longitude,
         }
         for p in prestadores
-    ]
+    ])
 
     context = {
         'form': form,
