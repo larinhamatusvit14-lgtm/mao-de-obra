@@ -1,7 +1,5 @@
 from django import forms
 
-from .models import TipoServico
-
 
 class BuscaPrestadorForm(forms.Form):
     cidade = forms.CharField(
@@ -10,13 +8,16 @@ class BuscaPrestadorForm(forms.Form):
         max_length=100,
         widget=forms.TextInput(attrs={'placeholder': 'Digite a cidade ou bairro'}),
     )
-    tipo_servico = forms.ModelChoiceField(
+    tipo_servico = forms.ChoiceField(
         required=False,
         label='Tipo de serviço',
-        queryset=TipoServico.objects.none(),
-        empty_label='Todos os serviços',
+        choices=[
+            ('', 'Todos os serviços'),
+            ('eletricista', 'Eletricista'),
+            ('encanador', 'Encanador'),
+            ('pedreiro', 'Pedreiro'),
+            ('manicure', 'Manicure'),
+            ('pintor', 'Pintor'),
+        ],
+        widget=forms.Select(),
     )
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.fields['tipo_servico'].queryset = TipoServico.objects.order_by('nome')
