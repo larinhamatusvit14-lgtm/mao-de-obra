@@ -5,13 +5,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mão de Obra</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{% static 'prestadores/styles.css' %}">
 </head>
 <body>
     <header class="topo">
         <div class="container topo__conteudo">
-            <div>
-                <p class="brand">Mão de Obra</p>
+            <div class="brand-wrap">
+                <div class="brand-icon">MO</div>
+                <div>
+                    <p class="brand">Mão de Obra</p>
+                </div>
             </div>
             <nav>
                 <a href="{% url 'prestadores:home' %}">Início</a>
@@ -48,6 +54,12 @@
                 <span>{{ prestadores|length }} profissional(es)</span>
             </div>
 
+            {% if mock_mode %}
+                <div class="aviso">
+                    <p>Banco em preparação. A interface está pronta e os prestadores aparecerão assim que o PostgreSQL estiver migrado.</p>
+                </div>
+            {% endif %}
+
             {% if prestadores %}
                 <div class="cards">
                     {% for prestador in prestadores %}
@@ -71,7 +83,7 @@
                         </article>
                     {% endfor %}
                 </div>
-            {% else %}
+            {% elif not mock_mode %}
                 <div class="vazio">
                     <p>Nenhum prestador encontrado com os filtros selecionados.</p>
                 </div>

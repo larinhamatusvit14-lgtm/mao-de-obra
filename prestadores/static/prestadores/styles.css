@@ -1,12 +1,26 @@
+:root {
+    --bg: #f3f7fb;
+    --panel: #ffffff;
+    --primary: #1d4ed8;
+    --primary-dark: #1e3a8a;
+    --primary-soft: #dbeafe;
+    --success: #16a34a;
+    --success-soft: #dcfce7;
+    --text: #0f172a;
+    --muted: #475569;
+    --line: #dbe3ee;
+    --shadow: 0 18px 40px rgba(15, 23, 42, 0.08);
+}
+
 * {
     box-sizing: border-box;
 }
 
 body {
     margin: 0;
-    font-family: Arial, sans-serif;
-    background: #f4f7fb;
-    color: #1f2937;
+    font-family: 'Inter', Arial, sans-serif;
+    background: linear-gradient(180deg, #f8fbff 0%, var(--bg) 100%);
+    color: var(--text);
 }
 
 img {
@@ -14,14 +28,15 @@ img {
 }
 
 .container {
-    width: min(1100px, 92%);
+    width: min(1120px, 92%);
     margin: 0 auto;
 }
 
 .topo {
-    background: #0f172a;
+    background: linear-gradient(135deg, #0f172a 0%, #111827 100%);
     color: #fff;
     padding: 18px 0;
+    box-shadow: 0 10px 25px rgba(15, 23, 42, 0.15);
 }
 
 .topo__conteudo {
@@ -30,63 +45,94 @@ img {
     align-items: center;
 }
 
+.brand-wrap {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.brand-icon {
+    width: 42px;
+    height: 42px;
+    border-radius: 12px;
+    display: grid;
+    place-items: center;
+    background: linear-gradient(135deg, #60a5fa, #2563eb);
+    color: #fff;
+    font-weight: 800;
+    font-size: 0.9rem;
+}
+
 .brand {
     margin: 0;
     font-size: 1.8rem;
-    font-weight: 700;
+    font-weight: 800;
+    letter-spacing: -0.05em;
 }
 
 .topo nav a {
     color: #fff;
     text-decoration: none;
-    font-weight: 600;
+    font-weight: 700;
+    padding: 10px 14px;
+    border-radius: 999px;
+    transition: 0.2s ease;
+}
+
+.topo nav a:hover {
+    background: rgba(255,255,255,0.1);
 }
 
 .hero {
-    padding: 48px 0 24px;
+    padding: 52px 0 26px;
 }
 
 .hero__conteudo {
     background: linear-gradient(135deg, #eff6ff, #dbeafe);
-    border-radius: 20px;
-    padding: 40px 30px;
-    box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+    border: 1px solid rgba(37,99,235,0.08);
+    border-radius: 28px;
+    padding: 42px 32px;
+    box-shadow: var(--shadow);
 }
 
 .badge {
     display: inline-block;
-    background: #dbeafe;
-    color: #1d4ed8;
+    background: var(--primary-soft);
+    color: var(--primary);
     padding: 8px 14px;
     border-radius: 999px;
     font-size: 0.8rem;
-    font-weight: 700;
-    margin-bottom: 16px;
+    font-weight: 800;
+    margin-bottom: 18px;
 }
 
 .hero h1 {
-    margin: 0 0 12px;
-    font-size: clamp(2rem, 3vw, 3rem);
+    margin: 0 0 14px;
+    font-size: clamp(2.1rem, 4vw, 3.5rem);
+    line-height: 1.1;
+    letter-spacing: -0.07em;
 }
 
 .hero p {
     margin: 0;
-    font-size: 1.05rem;
-    color: #374151;
+    font-size: 1.08rem;
+    color: var(--muted);
+    max-width: 620px;
 }
 
 .filtros {
-    margin: 10px 0 35px;
+    margin: 12px 0 32px;
 }
 
 .filtros__form {
     display: grid;
     grid-template-columns: 1.3fr 1.1fr auto;
     gap: 16px;
-    background: #fff;
+    background: var(--panel);
+    border: 1px solid var(--line);
     padding: 18px;
-    border-radius: 16px;
-    box-shadow: 0 12px 25px rgba(15, 23, 42, 0.06);
+    border-radius: 18px;
+    box-shadow: var(--shadow);
 }
 
 .campo {
@@ -97,31 +143,35 @@ img {
 
 .campo label {
     font-weight: 700;
-    color: #111827;
+    color: var(--text);
 }
 
 .campo input,
 .campo select {
-    border: 1px solid #d1d5db;
-    border-radius: 10px;
-    padding: 12px 14px;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 13px 14px;
     font-size: 1rem;
     background: #fff;
+    color: var(--text);
 }
 
 button {
     border: none;
-    background: #2563eb;
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
     color: #fff;
-    border-radius: 10px;
-    padding: 0 20px;
+    border-radius: 12px;
+    padding: 0 22px;
     cursor: pointer;
     font-size: 1rem;
-    font-weight: 700;
+    font-weight: 800;
+    min-height: 48px;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+    box-shadow: 0 12px 24px rgba(29, 78, 216, 0.25);
 }
 
 button:hover {
-    background: #1d4ed8;
+    transform: translateY(-1px);
 }
 
 .lista__header {
@@ -133,6 +183,13 @@ button:hover {
 
 .lista__header h2 {
     margin: 0;
+    font-size: 1.7rem;
+    letter-spacing: -0.04em;
+}
+
+.lista__header span {
+    color: var(--muted);
+    font-weight: 600;
 }
 
 .cards {
@@ -143,10 +200,11 @@ button:hover {
 }
 
 .card {
-    background: #fff;
-    border-radius: 18px;
-    padding: 20px;
-    box-shadow: 0 8px 22px rgba(15, 23, 42, 0.06);
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 22px;
+    padding: 22px;
+    box-shadow: 0 16px 30px rgba(15, 23, 42, 0.05);
     display: flex;
     flex-direction: column;
     gap: 14px;
@@ -165,24 +223,24 @@ button:hover {
 }
 
 .tag {
-    background: #dcfce7;
+    background: var(--success-soft);
     color: #166534;
     border-radius: 999px;
     padding: 6px 10px;
     font-size: 0.75rem;
-    font-weight: 700;
+    font-weight: 800;
 }
 
 .localizacao {
     margin: 0;
-    font-weight: 600;
-    color: #475569;
+    font-weight: 700;
+    color: var(--muted);
 }
 
 .descricao {
     margin: 0;
     color: #374151;
-    line-height: 1.6;
+    line-height: 1.7;
 }
 
 .card__rodape {
@@ -191,24 +249,38 @@ button:hover {
 
 .whatsapp {
     display: inline-block;
-    background: #16a34a;
+    background: linear-gradient(135deg, var(--success), #15803d);
     color: #fff;
     text-decoration: none;
-    border-radius: 10px;
-    padding: 10px 16px;
-    font-weight: 700;
+    border-radius: 12px;
+    padding: 11px 16px;
+    font-weight: 800;
 }
 
 .whatsapp:hover {
     background: #15803d;
 }
 
-.vazio {
-    background: #fff;
+.vazio,
+.aviso {
+    background: var(--panel);
+    border: 1px solid var(--line);
     padding: 28px;
     border-radius: 16px;
     text-align: center;
     box-shadow: 0 10px 25px rgba(15, 23, 42, 0.04);
+    margin-bottom: 18px;
+}
+
+.vazio p,
+.aviso p {
+    margin: 0;
+    font-size: 1rem;
+    color: var(--muted);
+}
+
+.aviso {
+    background: linear-gradient(135deg, #eff6ff, #f8fafc);
 }
 
 @media (max-width: 760px) {
