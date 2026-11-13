@@ -151,7 +151,27 @@
     </main>
     {{ prestadores_json|json_script:"profissionais-data" }}
     <script>
-        const profissionaisMock = JSON.parse(document.getElementById('profissionais-data').textContent || '[]');
+        const fallbackPrestadores = [
+            { nome: 'Carlos Mendes', tipo: 'Eletricista', cidade: 'São Paulo', bairro: 'Centro', latitude: -23.5505, longitude: -46.6333 },
+            { nome: 'Ana Paula Ribeiro', tipo: 'Encanador', cidade: 'Rio de Janeiro', bairro: 'Copacabana', latitude: -22.9707, longitude: -43.1822 },
+            { nome: 'Roberto Nunes', tipo: 'Pedreiro', cidade: 'Belo Horizonte', bairro: 'Savassi', latitude: -19.9167, longitude: -43.9345 },
+            { nome: 'Tiago Almeida', tipo: 'Pintor', cidade: 'Curitiba', bairro: 'Centro Cívico', latitude: -25.4297, longitude: -49.2711 },
+            { nome: 'Patrícia Gomes', tipo: 'Manicure', cidade: 'Fortaleza', bairro: 'Meireles', latitude: -3.7319, longitude: -38.5267 },
+            { nome: 'Daniel Soares', tipo: 'Eletricista', cidade: 'Brasília', bairro: 'Asa Norte', latitude: -15.7801, longitude: -47.9292 }
+        ];
+
+        let profissionaisMock = [];
+        try {
+            const raw = document.getElementById('profissionais-data')?.textContent || '[]';
+            profissionaisMock = JSON.parse(raw);
+        } catch (error) {
+            profissionaisMock = fallbackPrestadores;
+        }
+
+        if (!Array.isArray(profissionaisMock) || profissionaisMock.length === 0) {
+            profissionaisMock = fallbackPrestadores;
+        }
+
         const modal = document.getElementById('mapaModal');
         const perfilModal = document.getElementById('perfilModal');
         const button = document.querySelector('[data-open-map]');
@@ -241,8 +261,8 @@
             const y = ((lat - minLat) / (maxLat - minLat)) * 100;
 
             return {
-                x: Math.min(96, Math.max(4, x)),
-                y: Math.min(96, Math.max(4, 100 - y)),
+                x: Math.min(94, Math.max(6, x)),
+                y: Math.min(94, Math.max(6, 100 - y)),
             };
         }
 
@@ -251,8 +271,13 @@
 
             mapCanvas.innerHTML = '';
 
+            if (!profissionaisMock.length) {
+                mapCanvas.innerHTML = '<div class="map-empty">Nenhum profissional na área.</div>';
+                return;
+            }
+
             profissionaisMock.forEach((profissional) => {
-                const coords = projectToMap(profissional.latitude, profissional.longitude);
+                const coords = projectToMap(Number(profissional.latitude), Number(profissional.longitude));
                 const marker = document.createElement('button');
                 marker.type = 'button';
                 marker.className = 'map-marker';
