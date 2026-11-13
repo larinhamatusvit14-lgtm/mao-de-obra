@@ -200,26 +200,44 @@ button:hover {
 }
 
 .card {
-    background: var(--panel);
+    background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
     border: 1px solid var(--line);
     border-radius: 22px;
     padding: 22px;
     box-shadow: 0 16px 30px rgba(15, 23, 42, 0.05);
     display: flex;
     flex-direction: column;
+    gap: 16px;
+}
+
+.perfil-header {
+    display: flex;
+    align-items: center;
     gap: 14px;
 }
 
-.card__topo {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 10px;
+.avatar {
+    width: 52px;
+    height: 52px;
+    border-radius: 16px;
+    display: grid;
+    place-items: center;
+    background: linear-gradient(135deg, #60a5fa, #2563eb);
+    color: #fff;
+    font-weight: 800;
+    font-size: 1.15rem;
 }
 
-.card__topo h3 {
+.perfil-info {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    flex: 1;
+}
+
+.perfil-info h3 {
     margin: 0;
-    font-size: 1.3rem;
+    font-size: 1.35rem;
 }
 
 .tag {
@@ -229,18 +247,46 @@ button:hover {
     padding: 6px 10px;
     font-size: 0.75rem;
     font-weight: 800;
+    width: fit-content;
 }
 
-.localizacao {
-    margin: 0;
-    font-weight: 700;
+.perfil-meta {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    flex-wrap: wrap;
+    font-size: 0.9rem;
     color: var(--muted);
+}
+
+.meta-item {
+    background: #f8fafc;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    padding: 7px 10px;
+    font-weight: 600;
 }
 
 .descricao {
     margin: 0;
     color: #374151;
     line-height: 1.7;
+    min-height: 78px;
+}
+
+.mini-stats {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.mini-stats span {
+    background: #eef2ff;
+    color: #3730a3;
+    font-size: 0.75rem;
+    font-weight: 700;
+    border-radius: 999px;
+    padding: 7px 10px;
 }
 
 .card__rodape {
@@ -255,6 +301,8 @@ button:hover {
     border-radius: 12px;
     padding: 11px 16px;
     font-weight: 800;
+    width: 100%;
+    text-align: center;
 }
 
 .whatsapp:hover {

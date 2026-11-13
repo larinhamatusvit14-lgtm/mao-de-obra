@@ -64,12 +64,26 @@
                 <div class="cards">
                     {% for prestador in prestadores %}
                         <article class="card">
-                            <div class="card__topo">
-                                <h3>{{ prestador.nome }}</h3>
-                                <span class="tag">{{ prestador.tipo_servico.nome }}</span>
+                            <div class="perfil-header">
+                                <div class="avatar">{{ prestador.nome|slice:':1'|upper }}</div>
+                                <div class="perfil-info">
+                                    <h3>{{ prestador.nome }}</h3>
+                                    <span class="tag">{{ prestador.tipo_servico.nome }}</span>
+                                </div>
                             </div>
-                            <p class="localizacao">{{ prestador.bairro }} · {{ prestador.cidade }}</p>
+
+                            <div class="perfil-meta">
+                                <span class="meta-item">📍 {{ prestador.bairro }} · {{ prestador.cidade }}</span>
+                                <span class="meta-item">⭐ 4.9</span>
+                            </div>
+
                             <p class="descricao">{{ prestador.descricao }}</p>
+
+                            <div class="mini-stats">
+                                <span>Resposta rápida</span>
+                                <span>Prestação confiável</span>
+                            </div>
+
                             <div class="card__rodape">
                                 <a
                                     class="whatsapp"
